@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ha-package-vision"
+version = "0.0.1"
+description = ""
+authors = ["Alex Norell <anorell@roboflow.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+inference = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ha-package-vision = "ha_package_vision.main:main"
