@@ -7,7 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
-inference = "^0.21.1"
+inference = "^0.22.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+isort = "^5.13.2"
 
 [build-system]
 requires = ["poetry-core"]
