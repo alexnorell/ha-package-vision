@@ -25,6 +25,14 @@ This project integrates a package detection system using [Roboflow's Inference P
 
 This script uses Roboflow's machine learning capabilities to detect packages in a video feed. Upon detection, it updates a binary sensor in Home Assistant, which can be used to trigger various automations like sending notifications, turning on lights, or recording footage.
 
+### Problem
+
+Packages get delivered to my front porch, but the delivery person doesn't always knock on the door or ring the doorbell to let me know I've got a package. I do have a camera above my front door facing the ground to be able to manually check to see if there are any packages that I need to retrieve. Instead of having to manually check the camera feed, I want to be notified when a package arrives and is sitting on the porch.
+
+### Solution
+
+I have [Home Assistant](https://www.home-assistant.io/) set up for all of my other home automation needs, so I thought it would be a good fit for this project. I want to be able to set up a notification automation that will send me a notification when a package arrives. I will use Roboflow to train a model to detect packages from the video feed. Once the model is trained, I can use the Inference Pipeline to process the video feed and detect packages in real-time. The Inference Pipeline will update a binary sensor in Home Assistant, which I can use to send me a notification.
+
 ## Features
 
 - Real-time package detection using a video feed.
@@ -52,9 +60,30 @@ In this project, Roboflow's Inference Pipeline is used to process the video feed
 
 For more information, visit the [Roboflow website](https://roboflow.com/) and explore their [documentation](https://docs.roboflow.com/).
 
-## Prerequisites
+### Train a model
 
-- **Python 3.6+**
+The first step to training the model is to create a dataset of images of packages on my porch. I used my camera's past video recordings to find images of packages on my porch and I exported each image. I then used the [Roboflow Annotate](https://roboflow.com/docs/annotate) tool to label the packages in the images. This tool allows me to add bounding boxes to the images and label them as packages or not packages. Once I have the labeled images, I can use the [Roboflow Train](https://roboflow.com/docs/train) tool to train a model on the labeled images. I ended up training 7 models to get the accuracy I wanted.
+
+### Create a workflow
+
+Once I have a model trained, I can use the [Roboflow Workflow](https://docs.roboflow.com/workflows/create-a-workflow) tool to create a workflow that will process the video feed and detect packages in real-time. I created a workflow with the following settings:
+
+- Workflow Name: Porch Package Detection
+- Workflow Type: Object Detection
+- Workflow Description: Detects packages on the porch
+- Workflow Tags: porch, packages, detection
+- Workflow Input: Video
+- Workflow Output: Object Detection
+- Workflow Model: Porch Package Detection Model
+- Workflow Trigger: Video
+
+### Deploy the workflow
+
+I then deployed this workflow using Roboflow Inference, which will process the video feed and detect packages in real-time. I configured the workflow to run every 2 seconds and set the confidence threshold to 0.5. This means that the workflow will only detect packages that are at least 50% confident.
+
+## Requirements
+
+- **Python 3.11**
 - **Home Assistant** instance running and accessible.
 - **Roboflow Account** with an API key and a configured workflow.
 - **Camera or Video Feed** accessible by the script.

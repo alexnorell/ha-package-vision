@@ -1,0 +1,180 @@
+{
+  "version": "1.0",
+  "inputs": [
+    {
+      "type": "InferenceImage",
+      "name": "image"
+    }
+  ],
+  "steps": [
+    {
+      "type": "roboflow_core/roboflow_object_detection_model@v1",
+      "name": "model",
+      "images": "$steps.image_preprocessing.image",
+      "model_id": "porch-packages/7"
+    },
+    {
+      "type": "roboflow_core/detections_filter@v1",
+      "name": "is_package",
+      "predictions": "$steps.model.predictions",
+      "operations": [
+        {
+          "type": "DetectionsFilter",
+          "filter_operation": {
+            "type": "StatementGroup",
+            "operator": "and",
+            "statements": [
+              {
+                "type": "BinaryStatement",
+                "left_operand": {
+                  "type": "DynamicOperand",
+                  "operand_name": "_",
+                  "operations": [
+                    {
+                      "type": "ExtractDetectionProperty",
+                      "property_name": "confidence"
+                    }
+                  ]
+                },
+                "comparator": {
+                  "type": "(Number) >="
+                },
+                "right_operand": {
+                  "type": "StaticOperand",
+                  "value": 0.5
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "operations_parameters": {},
+      "uistate": {
+        "selectedFilterType": "filter_by_class_and_confidence",
+        "isClassFilteringActive": false,
+        "isConfidenceFilteringActive": true,
+        "classSetInclusionMode": "in",
+        "classList": [],
+        "confidenceThreshold": 0.5,
+        "confidenceOperator": ">=",
+        "referenceImage": "$inputs.image",
+        "zoneOperator": "in",
+        "isZoneStatic": true,
+        "zonePoints": [],
+        "detectionReferencePoint": "center",
+        "dynamicZone": null,
+        "detectionsOffset": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "type": "roboflow_core/detections_filter@v1",
+      "name": "on_porch",
+      "predictions": "$steps.is_package.predictions",
+      "operations": [
+        {
+          "type": "DetectionsFilter",
+          "filter_operation": {
+            "type": "StatementGroup",
+            "operator": "and",
+            "statements": [
+              {
+                "type": "BinaryStatement",
+                "left_operand": {
+                  "type": "DynamicOperand",
+                  "operand_name": "_",
+                  "operations": [
+                    {
+                      "type": "ExtractDetectionProperty",
+                      "property_name": "center"
+                    }
+                  ]
+                },
+                "comparator": {
+                  "type": "(Detection) in zone"
+                },
+                "right_operand": {
+                  "type": "StaticOperand",
+                  "value": [
+                    [
+                      300,
+                      0
+                    ],
+                    [
+                      300,
+                      359
+                    ],
+                    [
+                      639,
+                      359
+                    ],
+                    [
+                      639,
+                      0
+                    ]
+                  ]
+                },
+                "negate": false
+              }
+            ]
+          }
+        }
+      ],
+      "operations_parameters": {},
+      "uistate": {
+        "selectedFilterType": "filter_by_zone",
+        "isClassFilteringActive": false,
+        "isConfidenceFilteringActive": false,
+        "classSetInclusionMode": "in",
+        "classList": [],
+        "confidenceThreshold": 0.5,
+        "confidenceOperator": ">=",
+        "referenceImage": "$inputs.image",
+        "zoneOperator": "In Zone",
+        "isZoneStatic": true,
+        "zonePoints": [
+          [
+            300,
+            0
+          ],
+          [
+            300,
+            360
+          ],
+          [
+            640,
+            360
+          ],
+          [
+            640,
+            0
+          ]
+        ],
+        "detectionReferencePoint": "center",
+        "dynamicZone": null,
+        "detectionsOffset": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "type": "roboflow_core/image_preprocessing@v1",
+      "name": "image_preprocessing",
+      "image": "$inputs.image",
+      "task_type": "resize",
+      "width": 640,
+      "height": 345
+    }
+  ],
+  "outputs": [
+    {
+      "type": "JsonField",
+      "name": "output",
+      "coordinates_system": "own",
+      "selector": "$steps.on_porch.predictions"
+    }
+  ]
+}

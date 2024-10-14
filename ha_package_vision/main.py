@@ -76,15 +76,7 @@ def package_inference(result, video_frame):
     # Get the list of detected objects
     confidences = result["output"].confidence
     coordinates = result["output"].xyxy
-    valid_detections = []
-    for detection in range(len(confidences)):
-        confidence = confidences[detection]
-        # TODO: Move this custom logic to the workflow.
-        if confidence < 0.5:
-            continue
-        coord = coordinates[detection]
-        if coord[0] > 300:
-            valid_detections.append((confidence, coord))
+    valid_detections = [(confidences[i], coordinates[i]) for i in range(0, len(confidences))]
     number_of_packages = len(valid_detections)
     logging.info(f"Found {number_of_packages} package{'s' if number_of_packages > 1 else ''}")
     if number_of_packages:
