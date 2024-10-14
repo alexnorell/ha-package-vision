@@ -2,25 +2,6 @@
 
 This project integrates a package detection system using [Roboflow's Inference Pipeline](https://roboflow.com/) with [Home Assistant](https://www.home-assistant.io/). When a package is detected in the video feed, the system updates a binary sensor in Home Assistant, allowing you to trigger automations like notifications or recording events.
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Features](#features)
-- [Roboflow Integration](#roboflow-integration)
-- [Prerequisites](#prerequisites)
-- [Home Assistant Setup](#home-assistant-setup)
-  - [1. Create an `input_boolean` Entity](#1-create-an-input_boolean-entity)
-  - [2. Create a Template Binary Sensor](#2-create-a-template-binary-sensor)
-- [Environment Variables](#environment-variables)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Automations](#automations)
-  - [1. Send Notification When Package Detected](#1-send-notification-when-package-detected)
-  - [2. Reset Notification Status at Sunrise and Sunset](#2-reset-notification-status-at-sunrise-and-sunset)
-- [Troubleshooting](#troubleshooting)
-- [Notes](#notes)
-- [License](#license)
-
 ## Introduction
 
 This script uses Roboflow's machine learning capabilities to detect packages in a video feed. Upon detection, it updates a binary sensor in Home Assistant, which can be used to trigger various automations like sending notifications, turning on lights, or recording footage.
